@@ -2,29 +2,26 @@
 
 const fetch = require('node-fetch');
 
+// 1. SECRETS (HARDCODED FOR DEBUGGING ONLY - EXTREME SECURITY RISK)
+const KLAVIYO_PRIVATE_KEY = 'pk_2a8f049276940f6eb150d171788719a8f5'; 
+const KLAVIYO_LIST_ID = 'WFjmTH';
+const ALLOWED_ORIGIN = 'https://speciment.myshopify.com'; 
+
+
 // Vercel Serverless Function entry point
 module.exports = async (req, res) => {
-  // 1. SECURITY & CONFIGURATION
-  const KLAVIYO_PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_KEY;
-  const KLAVIYO_LIST_ID = process.env.KLAVIYO_LIST_ID;
-  const ALLOWED_ORIGIN = 'https://speciment.myshopify.com'; // Your specific Shopify store domain
 
-  // --- 2. CRITICAL CORS FIX (Must execute first) ---
-
-  // A. Set the Access-Control-Allow-Origin header (allows Shopify to talk to Vercel)
+  // --- 2. CRITICAL CORS FIX ---
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN); 
-  
-  // B. Set headers required for all preflight and actual requests
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // C. Handle the preflight OPTIONS request and immediately exit the function
+  // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end(); 
   }
 
   // --- 3. INPUT VALIDATION & METHOD CHECK ---
-  
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -39,7 +36,7 @@ module.exports = async (req, res) => {
     "data": {
       "type": "profile-subscription-bulk-create-job",
       "attributes": {
-        "custom_source": "Shopify Vercel Proxy (Speciment)",
+        "custom_source": "Shopify Vercel Proxy (Direct Debug)",
         "profiles": {
           "data": [
             {
